@@ -22,7 +22,7 @@ Monitor your hardware, tame your startup, clean junk, and overlay your FPS — a
 
 **Core Workbench** is a personal "Swiss-army" desktop app that bundles the tools I reach for most —
 hardware monitoring, drive health, a performance overlay, a cleaner, notes, desktop widgets, and more —
-behind one clean, custom-themed interface with a frameless title bar and an AETHON-inspired purple palette.
+behind one clean, custom-themed interface with a frameless title bar
 
 > Built for myself, kept tidy enough to share.
 
