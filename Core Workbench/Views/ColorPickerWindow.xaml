@@ -1,0 +1,119 @@
+<Window x:Class="Core_Workbench.Views.ColorPickerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        mc:Ignorable="d"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Title="Color" WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="NoResize" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight"
+        ShowInTaskbar="False">
+    <Border Margin="14" CornerRadius="14" Background="{StaticResource WindowBrush}"
+            BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="18">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" BlurRadius="26" ShadowDepth="0" Opacity="0.55" />
+        </Border.Effect>
+        <StackPanel Width="312">
+            <Grid MouseLeftButtonDown="TitleBar_Drag" Background="Transparent">
+                <TextBlock Text="Pick a color" FontSize="16" FontWeight="Bold"
+                           Foreground="{StaticResource TextBrush}" />
+            </Grid>
+
+            <!-- SV square + hue slider -->
+            <Grid Margin="0,14,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" CornerRadius="8" ClipToBounds="True"
+                        BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                    <Canvas x:Name="SvCanvas" Width="266" Height="180" Background="Transparent"
+                            MouseLeftButtonDown="Sv_Down" MouseMove="Sv_Move" MouseLeftButtonUp="Sv_Up">
+                        <Rectangle x:Name="HueBase" Width="266" Height="180" IsHitTestVisible="False" />
+                        <Rectangle Width="266" Height="180" IsHitTestVisible="False">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#FFFFFFFF" Offset="0" />
+                                    <GradientStop Color="#00FFFFFF" Offset="1" />
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle Width="266" Height="180" IsHitTestVisible="False">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#00000000" Offset="0" />
+                                    <GradientStop Color="#FF000000" Offset="1" />
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Ellipse x:Name="SvThumb" Width="12" Height="12" IsHitTestVisible="False"
+                                 Stroke="White" StrokeThickness="2">
+                            <Ellipse.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="3" ShadowDepth="0" Opacity="0.8" />
+                            </Ellipse.Effect>
+                        </Ellipse>
+                    </Canvas>
+                </Border>
+
+                <Border Grid.Column="2" CornerRadius="6" ClipToBounds="True"
+                        BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                    <Canvas x:Name="HueCanvas" Width="22" Height="180" Background="Transparent"
+                            MouseLeftButtonDown="Hue_Down" MouseMove="Hue_Move" MouseLeftButtonUp="Hue_Up">
+                        <Rectangle Width="22" Height="180" IsHitTestVisible="False">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#FFFF0000" Offset="0.000" />
+                                    <GradientStop Color="#FFFFFF00" Offset="0.167" />
+                                    <GradientStop Color="#FF00FF00" Offset="0.333" />
+                                    <GradientStop Color="#FF00FFFF" Offset="0.500" />
+                                    <GradientStop Color="#FF0000FF" Offset="0.667" />
+                                    <GradientStop Color="#FFFF00FF" Offset="0.833" />
+                                    <GradientStop Color="#FFFF0000" Offset="1.000" />
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Border x:Name="HueThumb" Width="22" Height="4" IsHitTestVisible="False"
+                                Background="#80000000" BorderBrush="White" BorderThickness="0,2,0,0" />
+                    </Canvas>
+                </Border>
+            </Grid>
+
+            <!-- Preview + inputs -->
+            <Grid Margin="0,14,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" x:Name="Preview" Width="44" Height="44" CornerRadius="8"
+                        BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Margin="0,0,12,0" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <Grid>
+                        <TextBlock Text="HEX" Style="{StaticResource SectionLabel}" VerticalAlignment="Center" />
+                        <TextBox x:Name="HexBox" Width="120" Height="30" HorizontalAlignment="Right"
+                                 VerticalContentAlignment="Center" Padding="8,0" TextChanged="Hex_Changed" />
+                    </Grid>
+                    <Grid Margin="0,8,0,0">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <TextBlock Text="R" Style="{StaticResource SubtleText}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                            <TextBox x:Name="RBox" Width="46" Height="28" VerticalContentAlignment="Center"
+                                     Padding="6,0" Margin="0,0,8,0" TextChanged="Rgb_Changed" />
+                            <TextBlock Text="G" Style="{StaticResource SubtleText}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                            <TextBox x:Name="GBox" Width="46" Height="28" VerticalContentAlignment="Center"
+                                     Padding="6,0" Margin="0,0,8,0" TextChanged="Rgb_Changed" />
+                            <TextBlock Text="B" Style="{StaticResource SubtleText}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                            <TextBox x:Name="BBox" Width="46" Height="28" VerticalContentAlignment="Center"
+                                     Padding="6,0" TextChanged="Rgb_Changed" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+
+            <!-- Buttons -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
+                <Button Content="Cancel" Style="{StaticResource GhostButton}" Click="Cancel_Click" Margin="0,0,10,0" />
+                <Button Content="Select" Style="{StaticResource PrimaryButton}" Click="Ok_Click" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

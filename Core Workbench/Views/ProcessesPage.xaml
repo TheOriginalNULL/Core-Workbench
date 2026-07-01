@@ -1,0 +1,99 @@
+<UserControl x:Class="Core_Workbench.Views.ProcessesPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BgBrush}">
+    <Grid Margin="32,26">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0">
+            <StackPanel>
+                <TextBlock Text="Processes" Style="{StaticResource HeaderText}" />
+                <TextBlock x:Name="SubText" Text="Top processes by CPU" Style="{StaticResource SubtleText}"
+                           Margin="0,2,0,0" />
+            </StackPanel>
+            <Button x:Name="RefreshButton" Content="Refresh" Style="{StaticResource GhostButton}"
+                    HorizontalAlignment="Right" VerticalAlignment="Center" Click="Refresh_Click" />
+        </Grid>
+
+        <!-- Search + sort -->
+        <Grid Grid.Row="1" Margin="0,16,0,0">
+            <TextBox x:Name="SearchBox" Height="38" VerticalContentAlignment="Center" Padding="12,0"
+                     Margin="0,0,250,0" TextChanged="Search_TextChanged" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock Text="Sort" Style="{StaticResource SubtleText}" VerticalAlignment="Center"
+                           Margin="0,0,8,0" />
+                <Button x:Name="SortCpu" Content="CPU" Style="{StaticResource GhostButton}" Padding="12,6"
+                        FontSize="12" Margin="0,0,4,0" Tag="Cpu" Click="Sort_Click" />
+                <Button x:Name="SortMem" Content="Memory" Style="{StaticResource GhostButton}" Padding="12,6"
+                        FontSize="12" Margin="0,0,4,0" Tag="Mem" Click="Sort_Click" />
+                <Button x:Name="SortName" Content="Name" Style="{StaticResource GhostButton}" Padding="12,6"
+                        FontSize="12" Tag="Name" Click="Sort_Click" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Column header -->
+        <Border Grid.Row="2" Margin="0,12,0,0" Padding="16,10" CornerRadius="8"
+                Background="{StaticResource SurfaceAltBrush}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="NAME" Style="{StaticResource SectionLabel}" />
+                <TextBlock Grid.Column="1" Text="CPU" Style="{StaticResource SectionLabel}" />
+                <TextBlock Grid.Column="2" Text="MEMORY" Style="{StaticResource SectionLabel}" />
+                <TextBlock Grid.Column="3" Text="" Width="148" />
+            </Grid>
+        </Border>
+
+        <!-- Rows -->
+        <ScrollViewer Grid.Row="3" Margin="0,8,0,0" VerticalScrollBarVisibility="Auto" Padding="0,0,6,0">
+            <StackPanel>
+                <ItemsControl x:Name="ProcessList">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{StaticResource CardBrush}" CornerRadius="8" Padding="16,9"
+                                    Margin="0,0,0,5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{Binding PidText, StringFormat='PID {0}'}"
+                                                   Style="{StaticResource SubtleText}" FontSize="11" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="{Binding CpuText}" FontWeight="SemiBold"
+                                               Foreground="{Binding CpuBrush}" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="2" Text="{Binding MemText}" FontWeight="SemiBold"
+                                               Foreground="{Binding MemBrush}" VerticalAlignment="Center" />
+                                    <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Button Content="Open" Style="{StaticResource GhostButton}" Padding="10,5"
+                                                FontSize="12" Margin="0,0,6,0" Tag="{Binding Pid}"
+                                                Click="Open_Click" ToolTip="Open file location" />
+                                        <Button Content="Kill" Style="{StaticResource DangerButton}" Padding="10,5"
+                                                FontSize="12" Tag="{Binding Pid}" Click="Kill_Click" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock x:Name="EmptyText" Text="No matching processes." Style="{StaticResource SubtleText}"
+                           Margin="2,4,0,0" Visibility="Collapsed" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

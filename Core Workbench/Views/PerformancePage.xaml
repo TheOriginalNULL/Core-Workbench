@@ -1,0 +1,374 @@
+<UserControl x:Class="Core_Workbench.Views.PerformancePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:Core_Workbench.Controls"
+             Background="{StaticResource BgBrush}">
+    <UserControl.Resources>
+        <Style x:Key="StatLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFB3A9D4" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style x:Key="StatValue" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,3,0,0" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,6,0">
+        <StackPanel Margin="26,24,26,16">
+
+            <!-- Header -->
+            <TextBlock Text="Performance" Style="{StaticResource HeaderText}" />
+            <TextBlock Text="Live hardware usage" Style="{StaticResource SubtleText}" Margin="0,2,0,0" />
+
+            <!-- System grid -->
+            <TextBlock Text="SYSTEM" Style="{StaticResource SectionLabel}" Margin="8,20,0,8" />
+            <UniformGrid Rows="1" Columns="3">
+                <Border Style="{StaticResource Card}" Padding="12" Margin="6,0">
+                    <StackPanel>
+                        <TextBlock x:Name="CpuName" Text="CPU" FontWeight="SemiBold"
+                                   TextTrimming="CharacterEllipsis" />
+                        <ctl:RadialGauge x:Name="CpuGauge" Width="96" Height="96" Caption="load"
+                                         Margin="0,8,0,2" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="CpuTemp" Text="-- °C" Style="{StaticResource SubtleText}"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}" Padding="12" Margin="6,0">
+                    <StackPanel>
+                        <TextBlock x:Name="GpuName" Text="GPU" FontWeight="SemiBold"
+                                   TextTrimming="CharacterEllipsis" />
+                        <ctl:RadialGauge x:Name="GpuGauge" Width="96" Height="96" Caption="load"
+                                         Margin="0,8,0,2" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="GpuTemp" Text="-- °C" Style="{StaticResource SubtleText}"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}" Padding="12" Margin="6,0">
+                    <StackPanel>
+                        <TextBlock Text="Memory" FontWeight="SemiBold" />
+                        <ctl:RadialGauge x:Name="RamGauge" Width="96" Height="96" Caption="used"
+                                         Margin="0,8,0,2" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="RamDetail" Text="-- / -- GB" Style="{StaticResource SubtleText}"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- History graphs -->
+            <TextBlock Text="HISTORY" Style="{StaticResource SectionLabel}" Margin="8,16,0,8" />
+            <UniformGrid Columns="2">
+                <Border Style="{StaticResource Card}" Padding="14" Margin="6">
+                    <StackPanel>
+                        <Grid>
+                            <TextBlock Text="CPU load" FontWeight="SemiBold" />
+                            <TextBlock x:Name="CpuLoadVal" HorizontalAlignment="Right" FontWeight="SemiBold"
+                                       Foreground="#FF8B6FE0" />
+                        </Grid>
+                        <ctl:Sparkline x:Name="SparkCpuLoad" Height="48" Margin="0,8,0,0"
+                                       LineBrush="#FF8B6FE0" Max="100" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" Padding="14" Margin="6">
+                    <StackPanel>
+                        <Grid>
+                            <TextBlock Text="GPU load" FontWeight="SemiBold" />
+                            <TextBlock x:Name="GpuLoadVal" HorizontalAlignment="Right" FontWeight="SemiBold"
+                                       Foreground="#FF5BE3A0" />
+                        </Grid>
+                        <ctl:Sparkline x:Name="SparkGpuLoad" Height="48" Margin="0,8,0,0"
+                                       LineBrush="#FF5BE3A0" Max="100" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" Padding="14" Margin="6">
+                    <StackPanel>
+                        <Grid>
+                            <TextBlock Text="CPU temp" FontWeight="SemiBold" />
+                            <TextBlock x:Name="CpuTempVal" HorizontalAlignment="Right" FontWeight="SemiBold"
+                                       Foreground="#FFFFB454" />
+                        </Grid>
+                        <ctl:Sparkline x:Name="SparkCpuTemp" Height="48" Margin="0,8,0,0"
+                                       LineBrush="#FFFFB454" Max="100" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" Padding="14" Margin="6">
+                    <StackPanel>
+                        <Grid>
+                            <TextBlock Text="GPU temp" FontWeight="SemiBold" />
+                            <TextBlock x:Name="GpuTempVal" HorizontalAlignment="Right" FontWeight="SemiBold"
+                                       Foreground="#FFFF8A5C" />
+                        </Grid>
+                        <ctl:Sparkline x:Name="SparkGpuTemp" Height="48" Margin="0,8,0,0"
+                                       LineBrush="#FFFF8A5C" Max="100" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- Network -->
+            <TextBlock Text="NETWORK" Style="{StaticResource SectionLabel}" Margin="8,16,0,8" />
+            <ItemsControl x:Name="AdapterList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}" Padding="16,14" Margin="6,0,6,8">
+                            <StackPanel>
+                                <Grid>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{Binding Description}" Style="{StaticResource SubtleText}"
+                                                   TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
+                                    </StackPanel>
+                                    <StackPanel HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding Ipv4}" FontWeight="SemiBold"
+                                                   HorizontalAlignment="Right" />
+                                        <TextBlock Text="{Binding LinkSpeed}" Style="{StaticResource SubtleText}"
+                                                   HorizontalAlignment="Right" Margin="0,1,0,0" />
+                                    </StackPanel>
+                                </Grid>
+                                <UniformGrid Rows="1" Columns="2" Margin="0,12,0,0">
+                                    <Border Background="{StaticResource SurfaceAltBrush}" CornerRadius="10"
+                                            Padding="14,10" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="↓ DOWNLOAD" Style="{StaticResource SectionLabel}"
+                                                       Foreground="{StaticResource GoodBrush}" />
+                                            <TextBlock Text="{Binding DownText}" FontSize="19" FontWeight="Bold"
+                                                       Margin="0,3,0,0" />
+                                            <TextBlock Text="{Binding TotalReceived, StringFormat='{}{0} total'}"
+                                                       Style="{StaticResource SubtleText}" Margin="0,2,0,0" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Background="{StaticResource SurfaceAltBrush}" CornerRadius="10"
+                                            Padding="14,10" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="↑ UPLOAD" Style="{StaticResource SectionLabel}"
+                                                       Foreground="#FF6FB1FF" />
+                                            <TextBlock Text="{Binding UpText}" FontSize="19" FontWeight="Bold"
+                                                       Margin="0,3,0,0" />
+                                            <TextBlock Text="{Binding TotalSent, StringFormat='{}{0} total'}"
+                                                       Style="{StaticResource SubtleText}" Margin="0,2,0,0" />
+                                        </StackPanel>
+                                    </Border>
+                                </UniformGrid>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock x:Name="NoNetText" Text="No active network adapters." Style="{StaticResource SubtleText}"
+                       Margin="8,0,0,0" Visibility="Collapsed" />
+
+            <!-- Storage usage grid -->
+            <TextBlock Text="STORAGE USAGE" Style="{StaticResource SectionLabel}" Margin="8,16,0,8" />
+            <ItemsControl x:Name="DiskList">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="3" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}" Padding="12" Margin="6">
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12"
+                                           TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" />
+                                <ctl:RadialGauge Width="96" Height="96" Value="{Binding UsedPercent}"
+                                                 Caption="used" Margin="0,8,0,2"
+                                                 HorizontalAlignment="Center" />
+                                <TextBlock Text="{Binding Detail}" Style="{StaticResource SubtleText}"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="{Binding TempText}" Style="{StaticResource SubtleText}"
+                                           HorizontalAlignment="Center" Margin="0,2,0,0" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- ===================== DRIVE HEALTH ===================== -->
+            <Grid Margin="8,18,0,8">
+                <TextBlock Text="DRIVE HEALTH" Style="{StaticResource SectionLabel}" VerticalAlignment="Center" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Margin="0,0,6,0">
+                    <TextBlock x:Name="UpdatedText" Style="{StaticResource SubtleText}"
+                               VerticalAlignment="Center" Margin="0,0,12,0" />
+                    <Button x:Name="RefreshButton" Content="Refresh" Style="{StaticResource GhostButton}"
+                            Padding="14,7" Click="Refresh_Click" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Health controls -->
+            <Border Style="{StaticResource Card}" Padding="16,12" Margin="6,0,6,0">
+                <Grid>
+                    <CheckBox x:Name="NotifyCheck" Content="Health notifications"
+                              VerticalAlignment="Center" Click="Notify_Click" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock Text="Alert when health below" Style="{StaticResource SubtleText}"
+                                   VerticalAlignment="Center" Margin="0,0,10,0" />
+                        <Button Content="−" Style="{StaticResource GhostButton}" Padding="0" Width="30" Height="30"
+                                Click="ThresholdDown_Click" />
+                        <TextBlock x:Name="ThresholdText" Text="50%" FontWeight="SemiBold" Width="46"
+                                   TextAlignment="Center" VerticalAlignment="Center" />
+                        <Button Content="+" Style="{StaticResource GhostButton}" Padding="0" Width="30" Height="30"
+                                Click="ThresholdUp_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Alert banner -->
+            <Border x:Name="AlertBanner" Margin="6,12,6,0" CornerRadius="12" Padding="16,12"
+                    Background="#33FF6B6B" BorderBrush="{StaticResource DangerBrush}" BorderThickness="1"
+                    Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="⚠" FontSize="18" Foreground="{StaticResource DangerBrush}"
+                               VerticalAlignment="Top" Margin="0,0,12,0" />
+                    <StackPanel>
+                        <TextBlock Text="ATTENTION" Style="{StaticResource SectionLabel}"
+                                   Foreground="{StaticResource DangerBrush}" />
+                        <TextBlock x:Name="AlertText" TextWrapping="Wrap" Margin="0,3,0,0"
+                                   Foreground="{StaticResource TextBrush}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Drive health cards -->
+            <ItemsControl x:Name="DriveList" Margin="6,12,6,0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}" Padding="18" Margin="0,0,0,14">
+                            <StackPanel>
+                                <!-- Card header -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="44" Height="44" CornerRadius="11"
+                                            Background="{StaticResource SurfaceAltBrush}" VerticalAlignment="Center">
+                                        <Path Width="22" Height="22" Stretch="Uniform" Data="{StaticResource IconDrive}"
+                                              Stroke="{StaticResource Accent2Brush}" StrokeThickness="1.5"
+                                              StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="14,0,0,0">
+                                        <TextBlock Text="{Binding Model}" FontWeight="Bold" FontSize="16"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                            <TextBlock Text="{Binding MediaType}" Style="{StaticResource SubtleText}" />
+                                            <TextBlock Text=" · " Style="{StaticResource SubtleText}" />
+                                            <TextBlock Text="{Binding Interface}" Style="{StaticResource SubtleText}" />
+                                            <TextBlock Text=" · " Style="{StaticResource SubtleText}" />
+                                            <TextBlock Text="{Binding Capacity}" Style="{StaticResource SubtleText}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <Border Grid.Column="2" CornerRadius="8" Padding="12,5" VerticalAlignment="Center"
+                                            Background="{Binding StatusBrush}">
+                                        <TextBlock Text="{Binding StatusText}" FontWeight="Bold" FontSize="12"
+                                                   Foreground="#15171C" />
+                                    </Border>
+                                </Grid>
+
+                                <!-- Card body -->
+                                <Grid Margin="0,16,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Width="150" VerticalAlignment="Center">
+                                        <ctl:RadialGauge Width="118" Height="118" Caption="health"
+                                                         Value="{Binding HealthValue}"
+                                                         ValueText="{Binding HealthText}"
+                                                         OverrideBrush="{Binding StatusBrush}"
+                                                         HorizontalAlignment="Center" />
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
+                                                    Margin="0,6,0,0">
+                                            <TextBlock Text="🌡" FontSize="13" Margin="0,0,5,0" />
+                                            <TextBlock Text="{Binding TempText}" FontWeight="SemiBold"
+                                                       Foreground="{Binding TempBrush}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <UniformGrid Grid.Column="1" Columns="4" Margin="14,0,0,0">
+                                        <StackPanel Margin="0,0,8,14" ToolTip="Total advertised capacity">
+                                            <TextBlock Text="CAPACITY" Style="{StaticResource StatLabel}" />
+                                            <TextBlock Text="{Binding Capacity}" Style="{StaticResource StatValue}" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,8,14" ToolTip="Bus / connection type">
+                                            <TextBlock Text="INTERFACE" Style="{StaticResource StatLabel}" />
+                                            <TextBlock Text="{Binding Interface}" Style="{StaticResource StatValue}" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,8,14" ToolTip="Drive firmware revision">
+                                            <TextBlock Text="FIRMWARE" Style="{StaticResource StatLabel}" />
+                                            <TextBlock Text="{Binding Firmware}" Style="{StaticResource StatValue}" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,0,14" ToolTip="{Binding Serial}">
+                                            <TextBlock Text="SERIAL" Style="{StaticResource StatLabel}" />
+                                            <TextBlock Text="{Binding Serial}" Style="{StaticResource StatValue}" />
+                                        </StackPanel>
+
+                                        <StackPanel Margin="0,0,8,14" ToolTip="Total time the drive has been powered on">
+                                            <TextBlock Text="POWER-ON HOURS" Style="{StaticResource StatLabel}" />
+                                            <TextBlock Text="{Binding PowerOnHours}" Style="{StaticResource StatValue}" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,8,14" ToolTip="Number of power / spin-up cycles">
+                                            <TextBlock Text="POWER CYCLES" Style="{StaticResource StatLabel}" />
+                                            <TextBlock Text="{Binding PowerCycles}" Style="{StaticResource StatValue}" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,8,14" ToolTip="Total data read over the drive's lifetime">
+                                            <TextBlock Text="HOST READS" Style="{StaticResource StatLabel}" />
+                                            <TextBlock Text="{Binding HostReads}" Style="{StaticResource StatValue}" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,0,14" ToolTip="Total data written over the drive's lifetime">
+                                            <TextBlock Text="HOST WRITES" Style="{StaticResource StatLabel}" />
+                                            <TextBlock Text="{Binding HostWrites}" Style="{StaticResource StatValue}" />
+                                        </StackPanel>
+
+                                        <StackPanel Margin="0,0,8,0" ToolTip="Estimated SSD endurance left (100% − wear)">
+                                            <TextBlock Text="REMAINING LIFE" Style="{StaticResource StatLabel}" />
+                                            <TextBlock Text="{Binding RemainingLife}" Style="{StaticResource StatValue}" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,8,0"
+                                                    ToolTip="Bad sectors remapped to spares; greater than 0 is a warning sign">
+                                            <TextBlock Text="REALLOC SECTORS" Style="{StaticResource StatLabel}" />
+                                            <TextBlock Text="{Binding ReallocatedSectors}" Style="{StaticResource StatValue}" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,8,0"
+                                                    ToolTip="Uncorrectable read / write or data-integrity errors">
+                                            <TextBlock Text="MEDIA ERRORS" Style="{StaticResource StatLabel}" />
+                                            <TextBlock Text="{Binding MediaErrors}" Style="{StaticResource StatValue}" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,0,0" ToolTip="Drive-reported critical health flags">
+                                            <TextBlock Text="CRITICAL WARNING" Style="{StaticResource StatLabel}" />
+                                            <TextBlock Text="{Binding CriticalWarning}" Style="{StaticResource StatValue}" />
+                                        </StackPanel>
+                                    </UniformGrid>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- No disks fallback -->
+            <TextBlock x:Name="NoDisksText" Text="No storage devices detected."
+                       Style="{StaticResource SubtleText}" Visibility="Collapsed" Margin="8,0,0,0" />
+
+            <!-- Admin hint -->
+            <Border Style="{StaticResource Card}" Padding="14" Margin="6,8,6,0"
+                    x:Name="AdminHint" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="⚠" FontSize="16" Margin="0,0,10,0"
+                               Foreground="{StaticResource WarnBrush}" />
+                    <TextBlock TextWrapping="Wrap" Foreground="{StaticResource TextMutedBrush}"
+                               Text="Temperatures need administrator rights. Relaunch as admin to see CPU/GPU/disk temps." />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

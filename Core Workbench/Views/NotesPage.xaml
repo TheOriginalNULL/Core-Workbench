@@ -1,0 +1,200 @@
+<UserControl x:Class="Core_Workbench.Views.NotesPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BgBrush}">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+    <Grid Margin="32,28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0">
+            <StackPanel>
+                <TextBlock Text="Notes" Style="{StaticResource HeaderText}" />
+                <TextBlock Text="Rich text editor — autosaved to your AppData folder"
+                           Style="{StaticResource SubtleText}" Margin="0,2,0,0" />
+            </StackPanel>
+            <Button Content="+ New note" Style="{StaticResource PrimaryButton}"
+                    HorizontalAlignment="Right" VerticalAlignment="Center" Click="New_Click" />
+        </Grid>
+
+        <!-- Body: list + editor -->
+        <Grid Grid.Row="1" Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Note list -->
+            <Border Grid.Column="0" Style="{StaticResource Card}" Padding="8" Margin="0,0,12,0">
+                <DockPanel>
+                <TextBox x:Name="SearchBox" DockPanel.Dock="Top" Height="32" Margin="2,2,2,8"
+                         Padding="8,0" VerticalContentAlignment="Center" TextChanged="Search_TextChanged" />
+                <ListBox x:Name="NoteList" Background="Transparent" BorderThickness="0"
+                         SelectionChanged="NoteList_SelectionChanged"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="10,8" />
+                            <Setter Property="Margin" Value="2" />
+                            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="bd" Background="Transparent" CornerRadius="6"
+                                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="bd" Property="Background"
+                                                        Value="{StaticResource SurfaceAltBrush}" />
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="bd" Property="Background"
+                                                        Value="{StaticResource AccentBrush}" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="📌" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Center"
+                                               Visibility="{Binding Pinned, Converter={StaticResource BoolToVis}}" />
+                                    <TextBlock Text="{Binding DisplayTitle}" FontWeight="SemiBold"
+                                               TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                                <TextBlock Text="{Binding Updated, StringFormat='{}{0:MMM d, HH:mm}'}"
+                                           FontSize="11" Opacity="0.7" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                </DockPanel>
+            </Border>
+
+            <!-- Editor -->
+            <Border Grid.Column="1" Style="{StaticResource Card}" x:Name="EditorCard" Padding="14">
+                <DockPanel>
+                    <!-- Title -->
+                    <TextBox x:Name="TitleBox" DockPanel.Dock="Top" FontSize="18" FontWeight="SemiBold"
+                             Background="Transparent" BorderThickness="0" Padding="0,0,0,8"
+                             TextChanged="Editor_Changed" />
+
+                    <!-- Toolbar -->
+                    <WrapPanel x:Name="Toolbar" DockPanel.Dock="Top" Margin="0,6,0,8">
+                        <Button Style="{StaticResource ToolBtn}" Click="Heading_Click" Tag="1" ToolTip="Heading 1">
+                            <TextBlock Text="H1" FontWeight="Bold" /></Button>
+                        <Button Style="{StaticResource ToolBtn}" Click="Heading_Click" Tag="2" ToolTip="Heading 2">
+                            <TextBlock Text="H2" FontWeight="Bold" /></Button>
+                        <Button Style="{StaticResource ToolBtn}" Click="Heading_Click" Tag="0" ToolTip="Body text">
+                            <TextBlock Text="Body" /></Button>
+
+                        <Border Width="1" Background="{StaticResource BorderBrush}" Margin="5,4" />
+
+                        <Button Style="{StaticResource ToolBtn}" Command="EditingCommands.ToggleBold"
+                                CommandTarget="{Binding ElementName=Editor}" ToolTip="Bold (Ctrl+B)">
+                            <TextBlock Text="B" FontWeight="Bold" /></Button>
+                        <Button Style="{StaticResource ToolBtn}" Command="EditingCommands.ToggleItalic"
+                                CommandTarget="{Binding ElementName=Editor}" ToolTip="Italic (Ctrl+I)">
+                            <TextBlock Text="I" FontStyle="Italic" /></Button>
+                        <Button Style="{StaticResource ToolBtn}" Command="EditingCommands.ToggleUnderline"
+                                CommandTarget="{Binding ElementName=Editor}" ToolTip="Underline (Ctrl+U)">
+                            <TextBlock Text="U" TextDecorations="Underline" /></Button>
+                        <Button Style="{StaticResource ToolBtn}" Click="Strike_Click" ToolTip="Strikethrough">
+                            <TextBlock Text="S" TextDecorations="Strikethrough" /></Button>
+
+                        <Border Width="1" Background="{StaticResource BorderBrush}" Margin="5,4" />
+
+                        <Button Style="{StaticResource ToolBtn}" Command="EditingCommands.ToggleBullets"
+                                CommandTarget="{Binding ElementName=Editor}" ToolTip="Bulleted list">
+                            <TextBlock Text="• —" /></Button>
+                        <Button Style="{StaticResource ToolBtn}" Command="EditingCommands.ToggleNumbering"
+                                CommandTarget="{Binding ElementName=Editor}" ToolTip="Numbered list">
+                            <TextBlock Text="1. —" /></Button>
+
+                        <Border Width="1" Background="{StaticResource BorderBrush}" Margin="5,4" />
+
+                        <Button Style="{StaticResource ToolBtn}" Command="EditingCommands.AlignLeft"
+                                CommandTarget="{Binding ElementName=Editor}" ToolTip="Align left">≡</Button>
+                        <Button Style="{StaticResource ToolBtn}" Command="EditingCommands.AlignCenter"
+                                CommandTarget="{Binding ElementName=Editor}" ToolTip="Align center">≡</Button>
+                        <Button Style="{StaticResource ToolBtn}" Command="EditingCommands.AlignRight"
+                                CommandTarget="{Binding ElementName=Editor}" ToolTip="Align right">≡</Button>
+
+                        <Border Width="1" Background="{StaticResource BorderBrush}" Margin="5,4" />
+
+                        <!-- Colours -->
+                        <Button Style="{StaticResource ToolBtn}" Click="Color_Click" Tag="#ECE8F6" Padding="0"
+                                Width="26" ToolTip="Default">
+                            <Ellipse Width="16" Height="16" Fill="#ECE8F6" /></Button>
+                        <Button Style="{StaticResource ToolBtn}" Click="Color_Click" Tag="#FF6B6B" Padding="0"
+                                Width="26" ToolTip="Red">
+                            <Ellipse Width="16" Height="16" Fill="#FF6B6B" /></Button>
+                        <Button Style="{StaticResource ToolBtn}" Click="Color_Click" Tag="#FFB454" Padding="0"
+                                Width="26" ToolTip="Amber">
+                            <Ellipse Width="16" Height="16" Fill="#FFB454" /></Button>
+                        <Button Style="{StaticResource ToolBtn}" Click="Color_Click" Tag="#5BE3A0" Padding="0"
+                                Width="26" ToolTip="Green">
+                            <Ellipse Width="16" Height="16" Fill="#5BE3A0" /></Button>
+                        <Button Style="{StaticResource ToolBtn}" Click="Color_Click" Tag="#6FB1FF" Padding="0"
+                                Width="26" ToolTip="Blue">
+                            <Ellipse Width="16" Height="16" Fill="#6FB1FF" /></Button>
+                        <Button Style="{StaticResource ToolBtn}" Click="Color_Click" Tag="#B98BFF" Padding="0"
+                                Width="26" ToolTip="Purple">
+                            <Ellipse Width="16" Height="16" Fill="#B98BFF" /></Button>
+                        <Button Style="{StaticResource ToolBtn}" Click="Highlight_Click" ToolTip="Highlight">
+                            <TextBlock Text="HL" /></Button>
+
+                        <Border Width="1" Background="{StaticResource BorderBrush}" Margin="5,4" />
+
+                        <Button Style="{StaticResource ToolBtn}" Command="EditingCommands.DecreaseFontSize"
+                                CommandTarget="{Binding ElementName=Editor}" ToolTip="Smaller text">A−</Button>
+                        <Button Style="{StaticResource ToolBtn}" Command="EditingCommands.IncreaseFontSize"
+                                CommandTarget="{Binding ElementName=Editor}" ToolTip="Larger text">A+</Button>
+                        <Button Style="{StaticResource ToolBtn}" Click="Table_Click" ToolTip="Insert 3×3 table">
+                            <TextBlock Text="Table" /></Button>
+                    </WrapPanel>
+
+                    <!-- Footer -->
+                    <Grid DockPanel.Dock="Bottom" Margin="0,10,0,0">
+                        <TextBlock x:Name="SaveStatus" Style="{StaticResource SubtleText}"
+                                   VerticalAlignment="Center" />
+                        <WrapPanel HorizontalAlignment="Right">
+                            <Button x:Name="PinFavButton" Content="☆ Pin" Style="{StaticResource GhostButton}"
+                                    Padding="12,7" Click="PinFav_Click" Margin="0,0,8,0" />
+                            <Button Content="Export" Style="{StaticResource GhostButton}" Padding="12,7"
+                                    Click="Export_Click" Margin="0,0,8,0" ToolTip="Save as .rtf" />
+                            <Button Content="Print / PDF" Style="{StaticResource GhostButton}" Padding="12,7"
+                                    Click="Print_Click" Margin="0,0,8,0" />
+                            <Button Content="📌 Widget" Style="{StaticResource GhostButton}" Padding="12,7"
+                                    Click="Pin_Click" Margin="0,0,8,0" ToolTip="Pin as desktop widget" />
+                            <Button x:Name="ReadToggle" Content="Read mode" Style="{StaticResource GhostButton}"
+                                    Padding="12,7" Click="ReadToggle_Click" Margin="0,0,8,0" />
+                            <Button Content="Delete" Style="{StaticResource DangerButton}" Padding="12,7"
+                                    Click="Delete_Click" />
+                        </WrapPanel>
+                    </Grid>
+
+                    <!-- The editor itself -->
+                    <RichTextBox x:Name="Editor" Margin="0,8,0,0" TextChanged="Editor_Changed"
+                                 SpellCheck.IsEnabled="True" />
+                </DockPanel>
+            </Border>
+
+            <!-- Empty state -->
+            <TextBlock x:Name="EmptyHint" Grid.Column="1" Text="No note selected — create one to start."
+                       Style="{StaticResource SubtleText}" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" Visibility="Collapsed" />
+        </Grid>
+    </Grid>
+</UserControl>

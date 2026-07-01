@@ -1,0 +1,139 @@
+<Window x:Class="Core_Workbench.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Core_Workbench"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        mc:Ignorable="d"
+        Title="Core Workbench" Height="700" Width="1120"
+        MinHeight="560" MinWidth="900"
+        Icon="/Assets/SecondaryLogo.ico"
+        WindowStyle="None" ResizeMode="CanResize" AllowsTransparency="False"
+        Background="{StaticResource WindowBrush}"
+        WindowStartupLocation="CenterScreen">
+
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="44" ResizeBorderThickness="6"
+                            CornerRadius="0" GlassFrameThickness="0"
+                            UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
+    <Border Background="{StaticResource WindowBrush}" BorderBrush="{StaticResource BorderBrush}"
+            BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- ============ Title bar: one continuous strip across the full width ============ -->
+            <Grid Grid.Row="0" Background="{StaticResource SurfaceBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Brand -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal"
+                            Margin="16,0,0,0" VerticalAlignment="Center">
+                    <Image Source="/Assets/SecondaryLogo.ico" Height="30" Width="30" Stretch="Uniform"
+                           VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" />
+                    <TextBlock Text="NULLS   /   WORKBENCH" FontWeight="Bold" FontSize="13"
+                               Margin="11,0,0,0" VerticalAlignment="Center"
+                               Foreground="{StaticResource TextBrush}" />
+                </StackPanel>
+
+                <!-- Window controls -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal"
+                            shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Button x:Name="MinButton" Style="{StaticResource CaptionButton}"
+                            Tag="{StaticResource IconMin}" Click="Minimize_Click" ToolTip="Minimize" />
+                    <Button x:Name="MaxButton" Style="{StaticResource CaptionButton}"
+                            Tag="{StaticResource IconMax}" Click="Maximize_Click" ToolTip="Maximize" />
+                    <Button x:Name="CloseButton" Style="{StaticResource CloseButton}"
+                            Tag="{StaticResource IconClose}" Click="Close_Click" ToolTip="Close" />
+                </StackPanel>
+            </Grid>
+
+            <!-- ============ Body: sidebar + content (divider lives here only) ============ -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="222" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Sidebar — same surface colour as the title bar above, no top border,
+                     so the brand strip flows seamlessly into the module list. -->
+                <Border Grid.Column="0" Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+                    <DockPanel>
+                        <!-- Status pill -->
+                        <Border DockPanel.Dock="Bottom" Margin="14,0,14,10" CornerRadius="8"
+                                Background="{StaticResource SurfaceAltBrush}" Padding="12,10">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="9" Height="9" VerticalAlignment="Center"
+                                         Fill="{StaticResource GoodBrush}" />
+                                <StackPanel Margin="10,0,0,0">
+                                    <TextBlock Text="Ready" FontSize="12" FontWeight="SemiBold" />
+                                    <TextBlock x:Name="StatusText" Style="{StaticResource SubtleText}"
+                                               FontSize="11" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Categorized nav (scrollable) -->
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel x:Name="NavPanel" Margin="0,8,0,8">
+                                <TextBlock Text="HOME" Style="{StaticResource SectionLabel}" Margin="24,2,20,6" />
+                                <RadioButton x:Name="NavDashboard" Style="{StaticResource NavButton}"
+                                             Tag="{StaticResource IconHome}" Content="Dashboard"
+                                             GroupName="nav" IsChecked="True" Checked="Nav_Checked" />
+                                <RadioButton x:Name="NavNotes" Style="{StaticResource NavButton}"
+                                             Tag="{StaticResource IconNotes}" Content="Notes"
+                                             GroupName="nav" Checked="Nav_Checked" />
+                                <RadioButton x:Name="NavWidgets" Style="{StaticResource NavButton}"
+                                             Tag="{StaticResource IconWidgets}" Content="Widgets"
+                                             GroupName="nav" Checked="Nav_Checked" />
+
+                                <TextBlock Text="MONITOR" Style="{StaticResource SectionLabel}" Margin="24,14,20,6" />
+                                <RadioButton x:Name="NavPerformance" Style="{StaticResource NavButton}"
+                                             Tag="{StaticResource IconDashboard}" Content="Performance"
+                                             GroupName="nav" Checked="Nav_Checked" />
+                                <RadioButton x:Name="NavProcesses" Style="{StaticResource NavButton}"
+                                             Tag="{StaticResource IconProcesses}" Content="Processes"
+                                             GroupName="nav" Checked="Nav_Checked" />
+                                <RadioButton x:Name="NavOverlay" Style="{StaticResource NavButton}"
+                                             Tag="{StaticResource IconOverlay}" Content="Overlay"
+                                             GroupName="nav" Checked="Nav_Checked" />
+
+                                <TextBlock Text="OPTIMIZE" Style="{StaticResource SectionLabel}" Margin="24,14,20,6" />
+                                <RadioButton x:Name="NavCleaner" Style="{StaticResource NavButton}"
+                                             Tag="{StaticResource IconCleaner}" Content="Cleaner"
+                                             GroupName="nav" Checked="Nav_Checked" />
+                                <RadioButton x:Name="NavStartup" Style="{StaticResource NavButton}"
+                                             Tag="{StaticResource IconStartup}" Content="Startup"
+                                             GroupName="nav" Checked="Nav_Checked" />
+                                <RadioButton x:Name="NavApps" Style="{StaticResource NavButton}"
+                                             Tag="{StaticResource IconApps}" Content="Apps"
+                                             GroupName="nav" Checked="Nav_Checked" />
+
+                                <TextBlock Text="SYSTEM" Style="{StaticResource SectionLabel}" Margin="24,14,20,6" />
+                                <RadioButton x:Name="NavSystemInfo" Style="{StaticResource NavButton}"
+                                             Tag="{StaticResource IconInfo}" Content="System Info"
+                                             GroupName="nav" Checked="Nav_Checked" />
+                                <RadioButton x:Name="NavSettings" Style="{StaticResource NavButton}"
+                                             Tag="{StaticResource IconSettings}" Content="Settings"
+                                             GroupName="nav" Checked="Nav_Checked" />
+                            </StackPanel>
+                        </ScrollViewer>
+                    </DockPanel>
+                </Border>
+
+                <!-- Content area -->
+                <ContentControl x:Name="ContentHost" Grid.Column="1"
+                                Background="{StaticResource BgBrush}" />
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

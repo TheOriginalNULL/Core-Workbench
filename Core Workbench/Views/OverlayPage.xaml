@@ -1,0 +1,160 @@
+<UserControl x:Class="Core_Workbench.Views.OverlayPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BgBrush}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,6,0">
+        <StackPanel Margin="32,26,32,20" MaxWidth="760" HorizontalAlignment="Left">
+            <TextBlock Text="Overlay" Style="{StaticResource HeaderText}" />
+            <TextBlock Text="An on-screen performance display for games and apps"
+                       Style="{StaticResource SubtleText}" Margin="0,2,0,0" />
+
+            <!-- Enable -->
+            <Border Style="{StaticResource Card}" Margin="0,20,0,0">
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text="Show overlay" FontWeight="SemiBold" />
+                        <TextBlock Text="Always-on-top stats. Works over windowed &amp; borderless games."
+                                   Style="{StaticResource SubtleText}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                    </StackPanel>
+                    <CheckBox x:Name="EnableCheck" HorizontalAlignment="Right" VerticalAlignment="Center"
+                              Click="Enable_Click" />
+                </Grid>
+            </Border>
+
+            <!-- Metrics -->
+            <TextBlock Text="METRICS" Style="{StaticResource SectionLabel}" Margin="2,20,0,8" />
+            <Border Style="{StaticResource Card}">
+                <WrapPanel>
+                    <CheckBox x:Name="MCpu" Content="CPU load" Tag="Cpu" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MCpuTemp" Content="CPU temp" Tag="CpuTemp" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MCpuClock" Content="CPU clock" Tag="CpuClock" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MCpuPower" Content="CPU power" Tag="CpuPower" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MCpuCores" Content="CPU per-core" Tag="CpuCores" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MGpu" Content="GPU load" Tag="Gpu" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MGpuTemp" Content="GPU temp" Tag="GpuTemp" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MGpuClock" Content="GPU clock" Tag="GpuClock" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MGpuMemClock" Content="GPU mem clock" Tag="GpuMemClock" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MGpuVram" Content="VRAM" Tag="GpuVram" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MGpuPower" Content="GPU power" Tag="GpuPower" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MGpuFan" Content="GPU fan" Tag="GpuFan" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MRam" Content="Memory" Tag="Ram" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MNet" Content="Network" Tag="Net" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MClock" Content="Clock" Tag="Clock" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MFps" Content="FPS (game)" Tag="Fps" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MFrametime" Content="Frametime" Tag="Frametime" Click="Metric_Click" Width="150" Margin="0,4" />
+                    <CheckBox x:Name="MLows" Content="1% / 0.1% lows" Tag="Lows" Click="Metric_Click" Width="150" Margin="0,4" />
+                </WrapPanel>
+            </Border>
+
+            <!-- Position -->
+            <TextBlock Text="POSITION" Style="{StaticResource SectionLabel}" Margin="2,20,0,8" />
+            <Border Style="{StaticResource Card}">
+                <WrapPanel>
+                    <Button x:Name="PosTL" Content="Top-left" Style="{StaticResource GhostButton}" Padding="14,7"
+                            Margin="0,0,6,0" Tag="TopLeft" Click="Pos_Click" />
+                    <Button x:Name="PosTR" Content="Top-right" Style="{StaticResource GhostButton}" Padding="14,7"
+                            Margin="0,0,6,0" Tag="TopRight" Click="Pos_Click" />
+                    <Button x:Name="PosBL" Content="Bottom-left" Style="{StaticResource GhostButton}" Padding="14,7"
+                            Margin="0,0,6,0" Tag="BottomLeft" Click="Pos_Click" />
+                    <Button x:Name="PosBR" Content="Bottom-right" Style="{StaticResource GhostButton}" Padding="14,7"
+                            Tag="BottomRight" Click="Pos_Click" />
+                </WrapPanel>
+            </Border>
+
+            <!-- Appearance -->
+            <TextBlock Text="APPEARANCE" Style="{StaticResource SectionLabel}" Margin="2,20,0,8" />
+            <Border Style="{StaticResource Card}" Margin="0,0,0,8">
+                <Grid>
+                    <TextBlock Text="Opacity" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="−" Style="{StaticResource GhostButton}" Padding="0" Width="30" Height="30"
+                                Click="OpacityDown_Click" />
+                        <TextBlock x:Name="OpacityText" Width="56" TextAlignment="Center" VerticalAlignment="Center"
+                                   FontWeight="SemiBold" />
+                        <Button Content="+" Style="{StaticResource GhostButton}" Padding="0" Width="30" Height="30"
+                                Click="OpacityUp_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Border Style="{StaticResource Card}" Margin="0,0,0,8">
+                <Grid>
+                    <TextBlock Text="Text size" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="−" Style="{StaticResource GhostButton}" Padding="0" Width="30" Height="30"
+                                Click="FontDown_Click" />
+                        <TextBlock x:Name="FontText" Width="56" TextAlignment="Center" VerticalAlignment="Center"
+                                   FontWeight="SemiBold" />
+                        <Button Content="+" Style="{StaticResource GhostButton}" Padding="0" Width="30" Height="30"
+                                Click="FontUp_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Border Style="{StaticResource Card}" Margin="0,0,0,8">
+                <Grid>
+                    <TextBlock Text="Columns" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="Col1" Content="1" Style="{StaticResource GhostButton}" Padding="0" Width="34"
+                                Height="30" Margin="0,0,4,0" Tag="1" Click="Columns_Click" />
+                        <Button x:Name="Col2" Content="2" Style="{StaticResource GhostButton}" Padding="0" Width="34"
+                                Height="30" Margin="0,0,4,0" Tag="2" Click="Columns_Click" />
+                        <Button x:Name="Col3" Content="3" Style="{StaticResource GhostButton}" Padding="0" Width="34"
+                                Height="30" Tag="3" Click="Columns_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Border Style="{StaticResource Card}" Margin="0,0,0,8">
+                <Grid>
+                    <TextBlock Text="Line spacing" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="−" Style="{StaticResource GhostButton}" Padding="0" Width="30" Height="30"
+                                Click="SpacingDown_Click" />
+                        <TextBlock x:Name="SpacingText" Width="56" TextAlignment="Center" VerticalAlignment="Center"
+                                   FontWeight="SemiBold" />
+                        <Button Content="+" Style="{StaticResource GhostButton}" Padding="0" Width="30" Height="30"
+                                Click="SpacingUp_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text="Click-through" FontWeight="SemiBold" />
+                        <TextBlock Text="Let mouse clicks pass through the overlay (recommended for gaming)."
+                                   Style="{StaticResource SubtleText}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                    </StackPanel>
+                    <CheckBox x:Name="ClickThroughCheck" HorizontalAlignment="Right" VerticalAlignment="Center"
+                              Click="ClickThrough_Click" />
+                </Grid>
+            </Border>
+
+            <!-- Colors -->
+            <TextBlock Text="COLORS" Style="{StaticResource SectionLabel}" Margin="2,20,0,8" />
+            <Border Style="{StaticResource Card}">
+                <StackPanel x:Name="ColorList" />
+            </Border>
+
+            <!-- Hotkey -->
+            <TextBlock Text="HOTKEY" Style="{StaticResource SectionLabel}" Margin="2,20,0,8" />
+            <Border Style="{StaticResource Card}">
+                <Grid>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Toggle overlay hotkey" FontWeight="SemiBold" />
+                        <TextBlock x:Name="HotkeyText" Style="{StaticResource SubtleText}" Margin="0,2,0,0" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <CheckBox x:Name="HotkeyEnabledCheck" Content="Enabled" VerticalAlignment="Center"
+                                  Margin="0,0,12,0" Click="HotkeyEnabled_Click" />
+                        <Button x:Name="HotkeyChangeBtn" Content="Change" Style="{StaticResource GhostButton}"
+                                Padding="14,7" Click="HotkeyChange_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Margin="0,16,0,0" CornerRadius="10" Padding="14,11" Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                <TextBlock TextWrapping="Wrap" Foreground="{StaticResource TextMutedBrush}"
+                           Text="Note: the overlay sits above windowed and borderless-fullscreen games. True exclusive-fullscreen games need render-hook injection, which isn't supported. FPS uses Windows frame events (DirectX titles)." />
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
